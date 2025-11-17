@@ -2,7 +2,7 @@
 
 A RAG-enabled voice agent that teaches the foundations of Hadith science using LiveKit, OpenAI, and Pinecone.
 
-**Live Demo**: [Deployed on Vercel + AWS]
+**Live Demo**: [https://usool-hadith-voice-tutor.vercel.app](https://usool-hadith-voice-tutor.vercel.app)
 
 ---
 
