@@ -20,14 +20,28 @@ function VoiceAssistantUI() {
   const [transcript, setTranscript] = useState<TranscriptMessage[]>([])
   const [currentUtterance, setCurrentUtterance] = useState<string>('')
   const [currentSpeaker, setCurrentSpeaker] = useState<'user' | 'assistant'>('user')
+  const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true)
   const transcriptEndRef = useRef<HTMLDivElement>(null)
+  const transcriptContainerRef = useRef<HTMLDivElement>(null)
   const room = useRoomContext()
   const { state, audioTrack } = useVoiceAssistant()
 
-  // Auto-scroll to bottom of transcript
+  // Auto-scroll to bottom only if user hasn't manually scrolled up
   useEffect(() => {
-    transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [transcript, currentUtterance])
+    if (isAutoScrollEnabled) {
+      transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [transcript, currentUtterance, isAutoScrollEnabled])
+
+  // Detect manual scrolling
+  const handleScroll = () => {
+    if (!transcriptContainerRef.current) return
+
+    const { scrollTop, scrollHeight, clientHeight } = transcriptContainerRef.current
+    const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 50
+
+    setIsAutoScrollEnabled(isAtBottom)
+  }
 
   // Listen for agent transcriptions
   useEffect(() => {
@@ -38,7 +52,8 @@ function VoiceAssistantUI() {
       segments: TranscriptionSegment[],
       participant: any
     ) => {
-      const isAgent = participant?.identity === 'agent' || participant?.name?.includes('agent')
+      // Check if this is the agent - agent is NOT the local participant
+      const isAgent = participant?.identity !== room.localParticipant.identity
 
       segments.forEach((segment) => {
         const text = segment.text.trim()
@@ -101,7 +116,7 @@ function VoiceAssistantUI() {
 
       <div className="transcript-container">
         <h2>Live Transcript</h2>
-        <div className="transcript">
+        <div className="transcript" ref={transcriptContainerRef} onScroll={handleScroll}>
           {transcript.length === 0 && !currentUtterance ? (
             <div className="empty-state">
               Conversation will appear here...
