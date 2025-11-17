@@ -10,11 +10,10 @@ A RAG-enabled voice agent that teaches the foundations of Hadith science using L
 
 **Usuli** is an AI-powered Islamic scholar specializing in Hadith sciences (Usool al-Hadith). This voice agent serves as a personal tutor for students learning the methodology and principles of Hadith authentication.
 
-The agent addresses a real problem: Many Muslims want to learn Hadith methodology but lack access to qualified scholars. Usuli makes this intricate science accessible through conversational AI, backed by authentic classical texts.
 
 ### Core Capabilities
 
-1. **Real-time Voice Conversations** - Natural dialogue about Hadith methodology
+1. **Real-time Voice Conversations** - Natural dialogue about Hadith methodology with the ability to interrupt the agent at any time to ask clarifying questions or change topics
 2. **RAG-Powered Answers** - Retrieves specific information from a 165-page classical text on Usool al-Hadith
 3. **Expert Tool Calls** - Lookup narrator reliability grades and Hadith classification terminology
 4. **Intelligent Summarization** - Condenses book content for concise voice responses
@@ -212,14 +211,6 @@ User hears response + sees real-time transcript
    - API keys stored in `.env` (production should use AWS Secrets Manager)
    - CORS set to allow all origins (should restrict to frontend domain in production)
 
-### Assumptions
-
-- **User Internet**: Stable connection for real-time voice
-- **Browser Support**: Modern browser with WebRTC support (Chrome, Edge recommended)
-- **Single User**: One-on-one tutoring sessions (not group conversations)
-- **PDF Language**: Mixed English/Arabic text in well-formatted PDF
-- **Pre-ingested Data**: Pinecone index populated before agent starts
-- **Demo Context**: Built for interview demonstration, not production scale
 
 ---
 
@@ -245,6 +236,45 @@ User hears response + sees real-time transcript
 **Voice Infrastructure**: LiveKit Cloud
 - Managed WebRTC signaling and media servers
 - Global edge network for low latency
+
+---
+
+## Future Improvements
+
+### Smart Arabic Transliteration Detection and Voice Switching
+
+**Enhancement**: Implement intelligent detection of Arabic terms and dynamic voice synthesis switching
+
+**Current Limitation**:
+- The agent currently uses English TTS for all responses, including Arabic terminology
+- Arabic words are pronounced with English phonetics, which can sound unnatural
+- Users may type Arabic terms using English transliteration (e.g., "hadith" instead of "حديث")
+
+**Proposed Solution**:
+1. **Transliteration Detection Layer**:
+   - Detect when users type Arabic words using English characters (e.g., "sahih", "isnad", "hadith")
+   - Maintain a dictionary of common Islamic terminology with standard transliterations
+   - Convert detected transliterations to Arabic script for improved semantic search
+
+2. **Dynamic Voice Synthesis**:
+   - Integrate Arabic TTS engine alongside English TTS
+   - Parse agent responses to identify Arabic terms and phrases
+   - Switch to Arabic voice synthesis for Arabic content, English for explanations
+   - Seamless blending of both languages in a single response
+
+3. **Benefits**:
+   - More authentic pronunciation of Islamic terminology
+   - Improved learning experience for students studying Arabic terms
+   - Better semantic matching in RAG retrieval when users use transliterated queries
+   - More natural multilingual conversation flow
+
+**Implementation Approach**:
+- Use Arabic transliteration library (e.g., `python-arabic-reshaper`, `pyarabic`)
+- Integrate Azure TTS or Google Cloud TTS for native Arabic speech synthesis
+- Apply text segmentation to identify Arabic vs. English segments in responses
+- Stream mixed-language audio in real-time via LiveKit
+
+This enhancement would significantly improve the authenticity and educational value of the voice tutor for Islamic studies.
 
 ---
 
