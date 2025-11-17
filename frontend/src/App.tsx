@@ -157,7 +157,11 @@ function App() {
   const [error, setError] = useState<string>('')
 
   const livekitUrl = import.meta.env.VITE_LIVEKIT_URL
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'
+
+  // Use proxy endpoint for production (HTTPS), direct backend for local dev
+  const tokenEndpoint = import.meta.env.PROD
+    ? '/api/token'  // Vercel serverless function
+    : `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'}/token`
 
   const handleStartCall = async () => {
     setIsConnecting(true)
@@ -165,7 +169,7 @@ function App() {
 
     try {
       // Get token from backend
-      const response = await fetch(`${backendUrl}/token`, {
+      const response = await fetch(tokenEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
