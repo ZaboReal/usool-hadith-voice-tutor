@@ -332,7 +332,3 @@ This project demonstrates a production-ready RAG-enabled voice agent that:
 - Deployment readiness (Docker, cloud hosting, environment configuration)
 
 ---
-
-**Developed by**: [Your Name]
-**For**: Bluejay Take-Home Interview
-**Date**: November 2025
