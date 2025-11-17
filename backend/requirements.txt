@@ -1,0 +1,28 @@
+# LiveKit
+livekit
+livekit-agents[openai]
+livekit-plugins-openai
+livekit-plugins-silero
+
+# RAG and Vector DB
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-openai
+langchain-pinecone
+langchain-huggingface
+pinecone-client
+pypdf
+tiktoken
+sentence-transformers
+
+# AI/ML
+openai
+
+# Utilities
+python-dotenv
+aiohttp
+
+# PDF Processing
+pymupdf
